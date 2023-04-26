@@ -5,6 +5,8 @@ from rest_framework.decorators import action
 from .models import ChatMessage
 from django.utils import timezone
 
+from utility.prompts import prompts
+
 
 class ChatViewSet(viewsets.ModelViewSet):
     queryset = ChatMessage.objects.all()
@@ -13,7 +15,8 @@ class ChatViewSet(viewsets.ModelViewSet):
         data = request.data
         is_true_prompt = True
         is_fle = data.get("is_fle", False)
-        prompt = "Unhappy" if not is_fle else None
+        message_number = data.get("message_number", 1)
+        prompt = prompts[message_number - 1] if not is_fle else None
         ChatMessage.objects.create(
             chat_id=data.get("chat_id", None),
             user_id=data.get("user_id", None),
