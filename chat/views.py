@@ -16,7 +16,7 @@ class ChatViewSet(viewsets.ModelViewSet):
         is_true_prompt = True
         is_fle = data.get("is_fle", False)
         message_number = data.get("message_number", 1)
-        prompt = prompts[message_number - 1] if not is_fle else None
+        prompt = prompts[message_number % len(prompts)] if not is_fle else None
         ChatMessage.objects.create(
             chat_id=data.get("chat_id", None),
             user_id=data.get("user_id", None),
