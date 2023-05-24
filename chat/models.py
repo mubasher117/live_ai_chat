@@ -3,6 +3,7 @@ from django.db import models
 
 class ChatMessage(models.Model):
     chat_id = models.CharField(max_length=100)
+    chat_name = models.CharField(max_length=100, default="")
     user_id = models.CharField(max_length=100)
     fle_id = models.CharField(max_length=100)
     is_fle = models.BooleanField(default=False)
@@ -10,6 +11,7 @@ class ChatMessage(models.Model):
     prompt = models.CharField(max_length=500, null=True)
     is_true_prompt = models.BooleanField(default=False)
     is_last_message = models.BooleanField(default=False)
+    last_message_duration = models.FloatField(null=True)
     chat_duration = models.FloatField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

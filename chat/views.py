@@ -17,14 +17,24 @@ class ChatViewSet(viewsets.ModelViewSet):
         is_fle = data.get("is_fle", False)
         message_number = data.get("message_number", 1)
         prompt = prompts[message_number % len(prompts)] if not is_fle else None
+        chat_id=data.get("chat_id")
+        last_message = ChatMessage.objects.filter(chat_id=chat_id).last()
+        last_message_duration = None
+        if last_message:
+            chat_duration = timezone.now() - timezone.localtime(last_message.created_at)
+            last_message_duration = chat_duration.total_seconds()
+        user_id = data.get("user_id", None)
+        fle_id = data.get("fle_id", None)
         ChatMessage.objects.create(
-            chat_id=data.get("chat_id", None),
-            user_id=data.get("user_id", None),
-            fle_id=data.get("fle_id", None),
+            chat_id=chat_id,
+            chat_name=user_id+"_"+fle_id,
+            user_id=user_id,
+            fle_id=fle_id,
             is_fle=is_fle,
             message=data.get("message", None),
             prompt=prompt,
             is_true_prompt=is_true_prompt,
+            last_message_duration=last_message_duration
         )
         response = {"prompt": prompt}
         return Response(data=response, status=status.HTTP_200_OK)
